@@ -4164,6 +4164,11 @@ void apocalypseStep() {
     
     double curTime = Time::getCurrentTime();
 
+    if( !apocalypsePossible ) {
+        apocalypseTriggered = false;
+        return;
+    }
+
     if( !apocalypseTriggered ) {
         
         if( apocalypseRequest == NULL &&
@@ -4231,14 +4236,6 @@ void apocalypseStep() {
     if( apocalypseTriggered ) {
 
         if( !apocalypseStarted ) {
-            apocalypsePossible = 
-                SettingsManager::getIntSetting( "apocalypsePossible", 0 );
-
-            if( !apocalypsePossible ) {
-                // settings change since we last looked at it
-                apocalypseTriggered = false;
-                return;
-                }
 
             if( !apocalypseRemote && 
                 apocalypseRequest == NULL && reflectorURL != NULL ) {
