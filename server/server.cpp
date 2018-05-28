@@ -1303,6 +1303,10 @@ double computeAge( LiveObject *inPlayer ) {
     
     double age = deltaSeconds * getAgeRate();
     
+	if( age > babyAge ) {
+		age = babyAge + ((age - babyAge) / 2);
+        }
+
     if( age >= forceDeathAge ) {
         setDeathReason( inPlayer, "age" );
         
@@ -1314,11 +1318,19 @@ double computeAge( LiveObject *inPlayer ) {
 
 
 int getSayLimit( LiveObject *inPlayer ) {
-    int limit = (unsigned int)( floor( computeAge( inPlayer ) ) + 1 );
+    double deltaSeconds = 
+        Time::getCurrentTime() - inPlayer->lifeStartTimeSeconds;
+    
+    double realAge = deltaSeconds * getAgeRate();
+
+    int limit = (unsigned int)( floor( realAge ) + 1 );
 
     if( inPlayer->isEve && limit < 30 ) {
         // give Eve room to name her family line
         limit = 30;
+        }
+    if( limit > 60) {
+        limit = 60;
         }
     return limit;
     }
@@ -1362,7 +1374,7 @@ char isFertileAge( LiveObject *inPlayer ) {
 int computeFoodCapacity( LiveObject *inPlayer ) {
     int ageInYears = lrint( computeAge( inPlayer ) );
     
-    if( ageInYears < 44 ) {
+    if( ageInYears < 52 ) {
         
         if( ageInYears > 16 ) {
             ageInYears = 16;
@@ -1372,11 +1384,7 @@ int computeFoodCapacity( LiveObject *inPlayer ) {
         }
     else {
         // food capacity decreases as we near 60
-        int cap = 60 - ageInYears + 4;
-        
-        if( cap < 4 ) {
-            cap = 4;
-            }
+        int cap = 60 - (ageInYears - 6);
         
         return cap;
         }
