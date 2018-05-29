@@ -3091,7 +3091,7 @@ void processLoggedInPlayer( Socket *inSock,
         newObject.isEve = true;
         newObject.lineageEveID = newObject.id;
         
-        newObject.lifeStartTimeSeconds -= 14 * ( 1.0 / getAgeRate() );
+        newObject.lifeStartTimeSeconds -= 23 * ( 1.0 / getAgeRate() );
 
         
         int femaleID = getRandomFemalePersonObject();
