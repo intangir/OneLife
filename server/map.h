@@ -55,10 +55,7 @@ void getEvePosition( char *inEmail, int *outX, int *outY );
 
 // save recent placements on Eve's death so that this player can spawn
 // near them if they are ever Eve again
-void mapEveDeath( char *inEmail, double inAge );
-
-
-
+void mapEveDeath( char *inEmail, double inAge, int inMapX, int inMapY );
 
 
 // returns properly formatted chunk message for chunk in rectangle shape

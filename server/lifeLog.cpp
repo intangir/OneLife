@@ -192,9 +192,11 @@ void logDeath( int inPlayerID, char *inPlayerEmail,
     recordPlayerLifeStats( inPlayerEmail, inSecPlayed );
     
     if( inEve ) {
-        
-        mapEveDeath( inPlayerEmail, inAge );
-        
+
+        if( inKillerEmail == NULL && !inDisconnect ) {
+            mapEveDeath( inPlayerEmail, inAge, inMapX, inMapY);
+            }
+
         if( inAge > 20 ) {
             resetEveRadius();
             deadYoungEveCount = 0;

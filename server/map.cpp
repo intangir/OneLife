@@ -5457,77 +5457,21 @@ void getEvePosition( char *inEmail, int *outX, int *outY ) {
 
 
 
-void mapEveDeath( char *inEmail, double inAge ) {
-    
-    // record exists?
-
-    int pX, pY, pR;
-
-    pR = eveRadius;
-    
-    printf( "Logging Eve death:   " );
-    
+void mapEveDeath( char *inEmail, double inAge, int inMapX, int inMapY) {
 
     if( inAge < minEveCampRespawnAge ) {
         printf( "Eve died too young (age=%f, min=%f), "
-                "not remembering her camp, and clearing any old camp memory\n",
+                "not remembering her camp\n",
                 inAge, minEveCampRespawnAge );
-        
-        // 0 for radius means not set
-        eveDBPut( inEmail, 0, 0, 0 );
-
+        // leave her original camp in db        
         return;
         }
-    
 
-    int num = 0;
-    
-    doublePair ave = computeRecentCampAve( &num );
-    
-    int result = eveDBGet( inEmail, &pX, &pY, &pR );
-    
-    if( result == 1 && pR > 0 ) {
-        
-        // don't keep growing radius after it gets too big
-        // if one player is dying young over and over, they will
-        // eventually overflow 32-bit integers
-
-        if( inAge < 16 && pR < 1024 ) {
-            pR *= 2;
-            }
-        else if( inAge > 20 ) {
-            pR = eveRadiusStart;
-            }
-        }
-    else {
-        // not found in DB
-        
-        // must overwrite no matter what
-        pX = lrint( ave.x );
-        pY = lrint( ave.y );
-
-        pR = eveRadiusStart;
-        }
-    
-    
-    if( num > 0 ) {
-        // overwrite middle from last life with new middle of placements
-        // from this life
-        pX = lrint( ave.x );
-        pY = lrint( ave.y );
-        }
-    else {
-        // otherwise, leave last life's average alone
-        printf( "Logging Eve death:   "
-                "Keeping camp average (%d,%d) from last life\n",
-                pX, pY );
-        }
-    
-
+    // just use the death area as the eve's camp
     printf( "Remembering Eve's camp in database (%d,%d) r=%d for %s\n",
-            pX, pY, pR, inEmail );
+            inMapX, inMapY, 5, inEmail );
     
-    eveDBPut( inEmail, pX, pY, pR );
+    eveDBPut( inEmail, inMapX, inMapY, 5 );
     }
 
 
